@@ -1,0 +1,84 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.nav-bar-container{
+width: 100%;
+height:70px;
+background-color: rgb(223, 222, 222);
+display: flex;
+justify-content: space-between;
+align-items: center;
+box-shadow: 0px 0px 12px 2px rgba(0, 0, 0, 0.301);
+}
+.full-flex{
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: center;
+}
+
+.icon{
+  margin-left:10px;
+  margin-right: 10px;
+}
+
+.stroke{
+  transform: rotate(-45deg);
+  margin-left:5px;
+  margin-right: 5px;
+}
+
+.logo{
+  background-color: white;
+  padding: 10px;
+  border-radius: 50%;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+select{
+  height: 35px;
+  padding-left: 10px;
+  padding-right: 10px;
+
+  border: none;
+  
+}
+canvas{
+  box-shadow: 0px 0px 12px 2px rgba(0, 0, 0, 0.555);
+}
