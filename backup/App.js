@@ -13,7 +13,7 @@ const CODEC = ['png', 'jpeg', 'jpg', 'ico']
 //   {type:"16", choose:false},
 // ]
 
-const Option = ({ val, setVal, setToggle }) => {
+const Option = ({ val, setVal, setToggle}) => {
   return (
     <div style={{ height: 40 }}
       onClick={() => {
@@ -25,7 +25,7 @@ const Option = ({ val, setVal, setToggle }) => {
   )
 }
 
-const Select = ({ data, value, setValue }) => {
+const Select = ({ data, value, setValue}) => {
   const [val, setVal] = useState(value)
   const [toggle, setToggle] = useState(false)
 
@@ -36,7 +36,7 @@ const Select = ({ data, value, setValue }) => {
         style={{ background: 'white', display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingLeft: 5, paddingRight: 5, width: 100, height: 40 }}>{value}<IoMdArrowDropdown color='black' size={25} /></div>
       {toggle &&
         <div style={{ position: 'absolute', paddingTop: 5, paddingRight: 5, paddingLeft: 5, width: 100, background: 'white', display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-          {data.map((d, i) => <Option setVal={setValue} setToggle={setToggle} val={d} key={i} index={i} />)}
+          {data.map((d, i) => <Option setVal={setValue}  setToggle={setToggle} val={d} key={i} index={i} />)}
         </div>
 
       }
@@ -45,7 +45,7 @@ const Select = ({ data, value, setValue }) => {
   )
 }
 
-const NavBar = ({ setType, codec, resolution, setResolution, setCodec, setColor, colorRef, color, ctx, bgColor, setBgColor, setSize, size }) => {
+const NavBar = ({ setType, codec, resolution,setResolution, setCodec,setColor, colorRef, color, ctx, bgColor, setBgColor, setSize , size}) => {
   // const [size, setSize] = useState(15)
   const onErase = (ctx) => {
     ctx.current.globalCompositeOperation = 'destination-out'
@@ -69,8 +69,7 @@ const NavBar = ({ setType, codec, resolution, setResolution, setCodec, setColor,
         />
         <BsFillSquareFill color='black' size={25} className='icon'
           onClick={() => setType('rect')} />
-        <BsCircleFill color='black' size={25} className='icon'
-        onClick={()=>setType('circle')} />
+        <BsCircleFill color='black' size={25} className='icon' />
         <BiMinus color='black' size={35} className='icon stroke'
           onClick={() => setType('stroke')} />
         <input type="color"
@@ -90,8 +89,8 @@ const NavBar = ({ setType, codec, resolution, setResolution, setCodec, setColor,
         />
       </div>
       <div className='full-flex'>
-        <Select data={TYPES} setValue={setResolution} value={resolution} />
-        <Select data={CODEC} setValue={setCodec} value={codec} />
+        <Select data={TYPES} setValue={setResolution} value={resolution}/>
+        <Select data={CODEC} setValue={setCodec} value={codec}/>
 
         <input type="color"
           className="color-picker"
@@ -144,9 +143,9 @@ function App() {
   const ctx = useRef()
   const [elements, setElements] = useState([]);
   const [rects, setRect] = useState([])
-  const [codec, setCodec] = useState('jpeg')
-  const [resolution, setResolution] = useState('32x32')
-  const [imageDownload, setImageDownload] = useState(null)
+  const [codec, setCodec] =useState('jpeg')
+  const [resolution, setResolution] =useState('32x32')
+const [imageDownload,setImageDownload] = useState(null)
   useLayoutEffect(() => {
 
     const canvas = canvasRef.current;
@@ -235,41 +234,15 @@ function App() {
 
     var pt = ctx.current.transformedPoint(lastX, lastY);
 
+    ctx.current.beginPath()
+    ctx.current.moveTo(pt.x, pt.x.y)
+
+    setPath((prev) => [{ id: paths.length, color: color, type: type, size: size, pos: [{ x: pt.x, y: pt.x.y }] }])
     setDrawing(true)
-    if (type === 'brush') {
-      ctx.current.beginPath()
-      ctx.current.moveTo(pt.x, pt.x.y)
-      // setPath((prev) => [{ id: paths.length, color: color, type: type, size: size, pos: [{ x: pt.x, y: pt.y }] }])
-      setPaths(prev => [...prev, { id: paths.length, color: color, type: type, size: size, pos: [{ x: pt.x, y: pt.y }] }])
-
-    } else if (type === 'eraser') {
-
-    } else if (type === 'rect') {
-   
-      setPaths((prev) => [...prev, { id: paths.length, color: color, type: type, size: size, pos: [{ x1: lastX, y1: lastY, x2: lastX, y2: lastY }] }])
-
-    } else if (type === 'circle') {
-
-      ctx.current.strokeStyle = color
-      ctx.current.lineWidth = size
-      ctx.current.fillStyle = color
-      ctx.current.beginPath()
-      // setPatha((prev) => [{ id: paths.length, color: color, type: type, size: size, pos: [{ x1: lastX, y1: lastY, x2: lastX, y2: lastY }] }])
-      setPaths((prev) => [...prev, { id: paths.length, color: color, type: type, size: size, pos: [{ x1: lastX, y1: lastY, x2: lastX, y2: lastY }] }])
-
-    } else if (type === 'stroke') {
-      setPaths(prev => [...prev, { id: paths.length, color: color, type: type, size: size, pos: [{ x1: lastX, y1: lastY, x2: lastX, y2: lastY }] }])
-
-      // setPath(prev => [{ id: paths.length, color: color, type: type, size: size, pos: [{ x1: lastX, y1: lastY, x2: lastX, y2: lastY }] }])
-      // setPaths(prev=> [...prev, ])
-    }
   }
 
   const onDraw = (evt) => {
 
-    // let lastX = evt.offsetX || (evt.pageX - canvasRef.current.offsetLeft)
-    // let lastY = evt.offsetY || (evt.pageY - canvasRef.current.offsetTop);
-    const index = paths.length - 1; //last element of the array "elements"
     setLast(prev => {
       prev.x = evt.offsetX || (evt.pageX - canvasRef.current.offsetLeft);
       prev.y = evt.offsetY || (evt.pageY - canvasRef.current.offsetTop);
@@ -277,48 +250,132 @@ function App() {
     })
 
     if (!drawing) return;
-    let pos;
+
     var pt = ctx.current.transformedPoint(last.x, last.y);
 
-    if (type === 'brush') {
-      pos = { x: pt.x, y: pt.y }
-      setPaths((prev) => {
-        const temp = prev[prev.length - 1].pos
-        prev[prev.length - 1].pos = [...temp, { x: pt.x, y: pt.y }]
-        return [...prev]
-      })
-    } else {
-      const { x1, y1, x2, y2 } = paths[paths.length - 1].pos[0];
-      if (type === 'eraser') {
+    ctx.current.lineTo(pt.x, pt.y)
+    ctx.current.stroke()
 
-      } else if (type === 'rect') {
-        pos = [{ x1, y1, x2: last.x, y2: last.y }]
-      } else if (type === 'circle') {
-        // ctx.current.fillRect(x1, y1, last.x, last.y);
-        // ctx.current.stroke();
-        pos = [{ x1, y1, x2: last.x, y2: last.y }]
+    // setPath((prev) => {
+    //   const temp = prev[0].pos
+    //   prev[0].pos = [...temp, { x: pt.x, y: pt.y }]
+    //   return prev
+    // })
 
-      } else if (type === 'stroke') {
-        pos = [{ x1, y1, x2: last.x, y2: last.y }]
-      }
+  setPath((prev) => {
+      const temp = prev[0].pos
+      prev[0].pos = [...temp, { x: pt.x, y: pt.y }]
+      return prev
+    })
 
-      setPaths(prev => {
-        prev[prev.length - 1].pos = pos
-        return [...prev];
-      })
-    }
   }
 
   const endDrawing = () => {
     ctx.current.closePath()
     setDrawing(false)
+    setPathsImages(prev => [...prev, ctx.current.getImageData(0, 0, canvasRef.current.width, canvasRef.current.height)])
+    setPaths(prev => [...prev, path[0]])
     setPath([])
+
   }
 
   const onMouseLeave = (e) => {
-    // setDrawing(false)
+    setDrawing(false)
   }
 
+  function createElement(x1, y1, x2, y2, color, size) {
+    // const roughEle = ctx.current.line(x1, y1, x2, y2);
+    return { x1, y1, x2, y2 , color,size};
+  }
+
+  const startStroke = (evt) => {
+    console.log('asdasd');
+    let lastX = evt.offsetX || (evt.pageX - canvasRef.current.offsetLeft)
+    let lastY = evt.offsetY || (evt.pageY - canvasRef.current.offsetTop);
+    setDrawing(true);
+    // const { clientX, clientY } = event;
+    const newEle = createElement(lastX, lastY, lastX, lastY,color, size);
+    setElements((state) => [...state, newEle]); //copying to the previous state
+
+  };
+
+  const endStroke = (evt) => {
+    setDrawing(false);
+  };
+
+  const onStroke = (evt) => {
+    let lastX = evt.offsetX || (evt.pageX - canvasRef.current.offsetLeft)
+    let lastY = evt.offsetY || (evt.pageY - canvasRef.current.offsetTop);
+    if (!drawing) return; //not in a mousedown postion
+
+    // const { clientX, clientY } = event;
+    // console.log(clientX, clientY);
+    const index = elements.length - 1; //last element of the array "elements"
+    const { x1, y1 } = elements[index];
+    const updatedEle = createElement(x1, y1, lastX, lastY, color,size);
+
+    //update the position with the new element instead of the previous one
+
+    const copyElement = [...elements];
+    copyElement[index] = updatedEle; //replacing last index
+    setElements(copyElement);
+  };
+
+  // const startStroke = (evt)=>{
+  //   let lastX = evt.offsetX || (evt.pageX - canvasRef.current.offsetLeft)
+  //   let lastY = evt.offsetY || (evt.pageY - canvasRef.current.offsetTop);
+
+  //   setStartStroke({x:lastX, y:lastY})
+  //   setDrawing(true)
+  //   ctx.current.beginPath()
+  //   ctx.current.moveTo(lastX, lastY)
+  // }
+  // const onStroke = (evt)=>{
+  //   let lastX = evt.offsetX || (evt.pageX - canvasRef.current.offsetLeft)
+  //   let lastY = evt.offsetY || (evt.pageY - canvasRef.current.offsetTop);
+  //   ctx.current.lineTo(lastX, lastY);
+
+  // }
+
+  // const endStroke = ()=>{}
+  const stratRect = (evt) => {
+    console.log('asdasd');
+    let lastX = evt.offsetX || (evt.pageX - canvasRef.current.offsetLeft)
+    let lastY = evt.offsetY || (evt.pageY - canvasRef.current.offsetTop);
+    setDrawing(true);
+    // const { clientX, clientY } = event;
+    const newEle = createElement(lastX, lastY, lastX, lastY, color,size);
+    console.log(newEle)
+    setRect((state) => [...state, newEle]); //copying to the previous state
+  }
+
+  const onRect = (evt) => {
+    let lastX = evt.offsetX || (evt.pageX - canvasRef.current.offsetLeft)
+    let lastY = evt.offsetY || (evt.pageY - canvasRef.current.offsetTop);
+    if (!drawing) return; //not in a mousedown postion
+
+    // const { clientX, clientY } = event;
+    // console.log(clientX, clientY);
+    const index = rects.length - 1; //last element of the array "elements"
+    const { x1, y1 } = rects[index];
+    const updatedEle = createElement(x1, y1, lastX, lastY,color,size);
+
+    //update the position with the new element instead of the previous one
+
+    // const copyElement = [...elements];
+    // copyElement[index] = updatedEle; //replacing last index
+    // console.log('rect => ', copyElement)
+    // setRect([...copyElement]);
+
+    setRect(prev => {
+      prev[index] = updatedEle
+      return [...prev]
+    })
+  }
+
+  const endRect = (e) => {
+    setDrawing(false);
+  }
 
   const drawGuideLines = () => {
     ctx.current.beginPath()
@@ -340,106 +397,72 @@ function App() {
 
   function redraw() {
 
-
-    // function roundRect(x, y, w, h, radius)
-    // {
-
-    //   // console.log(x,y,w,h,radius)
-    //   var r = x + w;
-    //   var b = y + h;
-    //   ctx.current.beginPath();
-    //   ctx.current.fillStyle = color
-    //   ctx.current.strokeStyle=color;
-    //   ctx.current.lineWidth="4";
-    //   ctx.current.moveTo(x+radius, y);
-    //   ctx.current.lineTo(r-radius, y);
-    //   ctx.current.quadraticCurveTo(r, y, r, y+radius);
-    //   ctx.current.lineTo(r, y+h-radius);
-    //   ctx.current.quadraticCurveTo(r, b, r-radius, b);
-    //   ctx.current.lineTo(x+radius, b);
-    //   ctx.current.quadraticCurveTo(x, b, x, b-radius);
-    //   ctx.current.lineTo(x, y+radius);
-    //   ctx.current.quadraticCurveTo(x, y, x+radius, y);
-    //   ctx.current.stroke();
-    // }
-    // roundRect(10, 10, 200, 100,10); // position x || position y || w : position corsurx - position x start || h: positiony - position y start || radius 
-
-// function RectWithRadius(){
-//   ctx.current.strokeStyle = p.color
-//   ctx.current.lineWidth = p.size
-//   ctx.current.fillStyle = p.color
-//   ctx.current.fillRect(p.pos[0].x1, p.pos[0].y1, p.pos[0].x2 - p.pos[0].x1, p.pos[0].y2 - p.pos[0].y1);
-//   ctx.current.stroke();
-//   ctx.current.closePath()
-
-
-// }
-
     var p1 = ctx.current.transformedPoint(0, 0);
+    ctx.current.fillStyle = bgColor
+    // ctx.current.clearRect(0, 0, ctx.current.canvas.width, ctx.current.canvas.height);
+    ctx.current.fillRect(0, 0, ctx.current.canvas.width, ctx.current.canvas.height);
     // drawGuideLines()
     if (paths.length > 0) {
-      ctx.current.fillStyle = bgColor
-      ctx.current.lineCap = "round"
-      ctx.current.lineJoin = "round"
-      ctx.current.fillRect(0, 0, ctx.current.canvas.width, ctx.current.canvas.height);
+
       paths.forEach(p => {
         ctx.current.beginPath()
-        if (p.type == 'rect') {
-          ctx.current.strokeStyle = p.color
-          ctx.current.lineWidth = p.size
-          ctx.current.fillStyle = p.color
-    // roundRect(p.pos[0].x1, p.pos[0].y1,  p.pos[0].x2 - p.pos[0].x1, p.pos[0].y2 - p.pos[0].y1,0); // position x || position y || w : position corsurx - position x start || h: positiony - position y start || radius 
-
-          ctx.current.fillRect(p.pos[0].x1, p.pos[0].y1,p.pos[0].x2 - p.pos[0].x1, p.pos[0].y2 - p.pos[0].y1);
-          ctx.current.stroke();
-          ctx.current.closePath()
-        } else if (p.type == 'circle') {
-          
-          ctx.current.strokeStyle = p.color
-          ctx.current.lineWidth = p.size
-          ctx.current.fillStyle = p.color
-          ctx.current.fillStyle = 'red';
-ctx.current.beginPath();
-ctx.current.ellipse(p.pos[0].x1 + ((p.pos[0].x2 - p.pos[0].x1)/2), p.pos[0].y1 +((p.pos[0].y2 - p.pos[0].y1)/2), (p.pos[0].x2-p.pos[0].x1<0 ? -1*(p.pos[0].x2-p.pos[0].x1):p.pos[0].x2-p.pos[0].x1),p.pos[0].y2-p.pos[0].y1<0? -1*(p.pos[0].y2-p.pos[0].y1):(p.pos[0].y2-p.pos[0].y1), 0, 0, 2 * Math.PI);
-ctx.current.fill();
-          // ctx.current.fillRect(p.pos.x1, p.pos.y1, p.pos.x2 - p.pos.x1, p.pos.y2 - p.pos.y1);
-          // ctx.current.stroke();
-          ctx.current.closePath()
-        } else if (p.type == 'stroke') {
-          ctx.current.strokeStyle = p.color
-          ctx.current.lineWidth = p.size
-          ctx.current.moveTo(p.pos[0].x1, p.pos[0].y1)
-          ctx.current.lineTo(p.pos[0].x2, p.pos[0].y2)
-          ctx.current.stroke();
-          ctx.current.closePath()
-        } else if (p.type == 'brush') {
-          for (let i = 0; i < p.pos.length - 1; i++) {
-            if (p.pos[i + 1] !== undefined) {
-              ctx.current.strokeStyle = p.color
-              ctx.current.lineWidth = p.size
-              ctx.current.moveTo(p.pos[i].x, p.pos[i].y)
-              ctx.current.lineTo(p.pos[i + 1].x, p.pos[i + 1].y)
-              ctx.current.stroke()
-            }
+        for (let i = 0; i < p.pos.length - 1; i++) {
+          if (p.pos[i + 1] !== undefined) {
+            ctx.current.strokeStyle = p.color
+            ctx.current.lineWidth = p.size
+            ctx.current.moveTo(p.pos[i].x, p.pos[i].y)
+            ctx.current.lineTo(p.pos[i + 1].x, p.pos[i + 1].y)
+            ctx.current.stroke()
           }
-          ctx.current.closePath()
         }
+        ctx.current.closePath()
+      })
 
+      console.log(363, elements)
+    }
+    if (elements.length > 0) {
+      elements.forEach(e => {
+
+        ctx.current.beginPath()
+        ctx.current.strokeStyle = e.color
+
+        ctx.current.lineWidth = e.size
+        ctx.current.moveTo(e.x1, e.y1)
+        ctx.current.lineTo(e.x2, e.y2)
+        ctx.current.stroke();
+        ctx.current.closePath()
       })
     }
 
+    if (rects.length > 0) {
+      console.log(rects)
+      rects.forEach(r => {
+        ctx.current.strokeStyle = r.color
+        ctx.current.lineWidth = r.size
+        ctx.current.fillStyle = r.color
+
+        ctx.current.beginPath()
+        ctx.current.fillRect(r.x1, r.y1, r.x2 - r.x1, r.y2 - r.y1);
+        // ctx.current.strokeStyle = "red";
+
+        ctx.current.stroke();
+
+        ctx.current.closePath()
+      })
+    }
   }
 
   useEffect(() => {
     redraw()
     var image = new Image()
-    var img = ctx.current.canvas.toDataURL("image/jpeg");
+    var img    = ctx.current.canvas.toDataURL("image/jpeg");
     image.src = img
     const fav = document.getElementById('favicon');
-    fav.href = img
-    fav.href = img
+    fav.href  = img
   }, [bgColor, elements, rects, paths])
+
   useEffect(() => {
+
     ctx.current.lineCap = "round"
     ctx.current.lineJoin = "round"
     ctx.current.strokeStyle = color
@@ -447,25 +470,25 @@ ctx.current.fill();
   }, [color, size])
 
 
-  const downlaod_img = (el) => {
-    // get image URI from canvas object
-    //  var imageURI = ctx.current.canvas.toDataURL("image/jpg");
-    //  el.href = imageURI;
-    var image = new Image()
-    var img = ctx.current.canvas.toDataURL();
-    const a = document.createElement('a')
-    a.href = img;
-    a.download = `favicon.${codec}`;
-    a.click();
-    // // // if(img){
-    //   var img    = ctx.current.canvas.toDataURL("image/png");
-    //     image.src = img
-    // setImageDownload(image)
-    // document.write('<img src="'+img+'"/>');
+  const downlaod_img = (el)=>{
+ // get image URI from canvas object
+//  var imageURI = ctx.current.canvas.toDataURL("image/jpg");
+//  el.href = imageURI;
+var image = new Image()
+var img  = ctx.current.canvas.toDataURL();
+const a = document.createElement('a')
+a.href = img;
+a.download= `favicon.${codec}`;
+a.click();
+// // // if(img){
+//   var img    = ctx.current.canvas.toDataURL("image/png");
+//     image.src = img
+// setImageDownload(image)
+// document.write('<img src="'+img+'"/>');
 
-    // // }
-    // document.write('<img src="'+img+'"/>');
-  }
+// // }
+// document.write('<img src="'+img+'"/>');
+}
   return (
     <div className="App">
       <NavBar setType={setType}
@@ -477,28 +500,30 @@ ctx.current.fill();
         setBgColor={setBgColor}
         setSize={setSize}
         size={size}
-        setCodec={setCodec}
-        setResolution={setResolution}
+        setCodec= {setCodec}
+        setResolution = {setResolution}
         codec={codec}
         resolution={resolution}
       />
       <h1> FAVICION EASLY </h1>
+      {/* <CheckBox /> */}
+      {console.log(type)}
       <canvas
         ref={canvasRef}
         width={500}
         height={500}
         ref={canvasRef}
-        onMouseDown={startDrawing}
-        onMouseMove={onDraw}
-        onMouseUp={endDrawing}
+        onMouseDown={(type === 'brush' || type === 'erase') ? startDrawing : (type === 'stroke') ? startStroke : (type === 'rect') ? stratRect : null}
+        onMouseMove={(type === 'brush' || type === 'erase') ? onDraw : (type === 'stroke') ? onStroke : (type === 'rect') ? onRect : null}
+        onMouseUp={(type === 'brush' || type === 'erase') ? endDrawing : (type === 'stroke') ? endStroke : (type === 'rect') ? endRect : null}
         onMouseLeave={(e) => onMouseLeave(e)}
       >
 
 
       </canvas>
-      <div id="download" onClick={() => {
-        downlaod_img()
-      }}>download</div>
+      <div id="download"   onClick={()=>{
+  downlaod_img()
+}}>download</div>
     </div>
   );
 }
